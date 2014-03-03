@@ -1,0 +1,21 @@
+{
+	"name": "Stillman/Kohana-DB",
+	"description": "Improved DB class for Kohana 3.x",
+	"type": "library",
+	"keywords": ["Kohana", "database"],
+	"homepage": "http://github.com/Stillman/Kohana-DB",
+	"license": "GPL",
+
+	"authors": [
+		{
+			"name": "Dmitry Stillman",
+			"email": "dmitry.stillman@gmail.com",
+			"homepage": "http://mentalsoftware.net",
+			"role": "Developer"
+		}
+    ],
+
+	"require": {
+		"php": ">=5.3.3"
+	}
+}
