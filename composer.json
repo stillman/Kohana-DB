@@ -1,5 +1,5 @@
 {
-	"name": "Stillman/Kohana-DB",
+	"name": "stillman/kohana-db",
 	"description": "Improved DB class for Kohana 3.x",
 	"type": "library",
 	"keywords": ["Kohana", "database"],
