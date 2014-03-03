@@ -1,8 +1,8 @@
 {
 	"name": "stillman/kohana-db",
 	"description": "Improved DB class for Kohana 3.x",
-	"type": "library",
-	"keywords": ["Kohana", "database"],
+	"type": "kohana-module",
+	"keywords": ["kohana", "database"],
 	"homepage": "http://github.com/Stillman/Kohana-DB",
 	"license": "GPL",
 
@@ -16,6 +16,7 @@
     ],
 
 	"require": {
-		"php": ">=5.3.3"
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
 	}
 }
