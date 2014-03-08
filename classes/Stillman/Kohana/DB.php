@@ -2,6 +2,8 @@
 
 namespace Stillman\Kohana;
 
+use Database;
+
 class DB extends \Kohana_DB
 {
 	public static function insert_row($table, array $data)
@@ -11,13 +13,41 @@ class DB extends \Kohana_DB
 
 	public static function find(array $criteria)
 	{
-		isset($criteria['SELECT']) or $criteria['SELECT'] = ['*'];
+		return static::makeSql(Database::SELECT, $criteria);
+	}
+
+	public static function delete_rows(array $criteria)
+	{
+		return static::makeSql(Database::DELETE, $criteria);
+	}
+
+	public static function count(array $criteria, $connection = NULL)
+	{
+		unset($criteria['LIMIT'], $criteria['OFFSET'], $criteria['ORDER_BY']);
+		$criteria['SELECT'] = ['COUNT(*) cnt'];
+		return (int) \DB::find($criteria)->execute($connection)->get('cnt');
+	}
+
+	public static function makeSql($statement, array $criteria)
+	{
+		$statements = [
+			Database::SELECT => 'SELECT',
+			Database::DELETE => 'DELETE',
+		];
+
+		$action = $statements[$statement];
+
 		isset($criteria['OFFSET']) or $criteria['OFFSET'] = 0;
 		isset($criteria['params']) or $criteria['params'] = [];
 
-		$select = is_array($criteria['SELECT'])
-			? implode(",\n\t", $criteria['SELECT'])
-			: $criteria['SELECT'];
+		if ( ! isset($criteria[$action]))
+		{
+			$criteria[$action] = ($statement === Database::SELECT) ? ['*'] : [];
+		}
+
+		$select = is_array($criteria[$action])
+			? implode(",\n\t", $criteria[$action])
+			: $criteria[$action];
 
 		$from = is_array($criteria['FROM'])
 			? implode(', ', $criteria['FROM'])
@@ -55,15 +85,8 @@ class DB extends \Kohana_DB
 			? "\nLIMIT {$criteria['LIMIT']} OFFSET {$criteria['OFFSET']}"
 			: '';
 
-		$sql = "SELECT \n\t$select \nFROM $from $join $where $group_by $having $order_by $limit";
+		$sql = "{$statements[$statement]} \n\t$select \nFROM $from $join $where $group_by $having $order_by $limit";
 
-		return \DB::query(\Database::SELECT, $sql)->parameters($criteria['params']);
-	}
-
-	public static function count(array $criteria, $connection = NULL)
-	{
-		unset($criteria['LIMIT'], $criteria['OFFSET'], $criteria['ORDER_BY']);
-		$criteria['SELECT'] = ['COUNT(*) cnt'];
-		return (int) \DB::find($criteria)->execute($connection)->get('cnt');
+		return \DB::query($statement, $sql)->parameters($criteria['params']);
 	}
 }
