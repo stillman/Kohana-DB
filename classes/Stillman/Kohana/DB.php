@@ -6,9 +6,18 @@ use Database;
 
 class DB extends \Kohana_DB
 {
-	public static function insert_row($table, array $data)
+	/**
+	 * Insert a row
+	 *
+	 * @param   $table       string  Table name to insert row into
+	 * @param   $data        array   Array (hash) of data to insert
+	 * @param   $connection  mixed   Connection name or object of Kohana_Database class
+	 *
+	 * @return  array(last_insert_id, num_rows)
+	 */
+	public static function insert_row($table, array $data, $connection = NULL)
 	{
-		return \DB::insert($table, array_keys($data))->values($data)->execute();
+		return \DB::insert($table, array_keys($data))->values($data)->execute($connection);
 	}
 
 	public static function find(array $criteria)
